@@ -39,6 +39,7 @@
 
       .day {
         display: inline-block;
+        position: relative;
         width: 14%;
         text-align: center;
         min-height: 100px;
@@ -109,6 +110,17 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .withEvent span {
+        display: inline-block;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 16px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #00ff84;
+      }
     </style>
   </head>
   <body>
@@ -158,6 +170,11 @@
         const meetingDay = document.querySelector("#newMeetingDay").innerText; // grabs the day in the newMeetingDay h4
         let meetingTime = document.querySelector("#newMeetingTime"); // grabs the time from the input
         let meetingName = document.querySelector("#newMeetingName"); // grabs the meeting name from the input
+
+        let calendar = document.querySelector("#calendar"); // getting a reference for the calendar div
+        let dayCell = calendar.children[parseInt(meetingDay) - 1]; // finding the current cell from the calendar children
+        dayCell.classList.add("withEvent"); // adds css class to that particular cell (it will have styling for the dot which rappresents a present meeting on the day)
+        dayCell.innerHTML += "<span></span>"; // creates the span which will become the dot, and append it inside the dayCell
 
         console.log(meetingDay, meetingTime.value, meetingName.value);
         appointments[parseInt(meetingDay) - 1].push(

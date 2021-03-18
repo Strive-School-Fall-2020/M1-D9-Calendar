@@ -9,6 +9,10 @@
       rel="stylesheet"
     />
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
         background-color: #f8f8f8;
         font-family: "Poppins", sans-serif;
@@ -187,26 +191,45 @@
       };
 
       const saveMeeting = function () {
-        const meetingDay = document.querySelector("#newMeetingDay").innerText; // grabs the day in the newMeetingDay h4
-        let meetingTime = document.querySelector("#newMeetingTime"); // grabs the time from the input
-        let meetingName = document.querySelector("#newMeetingName"); // grabs the meeting name from the input
+        let selected = document.querySelector(".selected"); // if there's any selected day in the page it will save it
+        // is there any "selected" cell in the calendar?
+        if (selected) {
+          // only if a .selected element exists in the page
+          const meetingDay = document.querySelector("#newMeetingDay").innerText; // grabs the day in the newMeetingDay h4
+          let meetingTime = document.querySelector("#newMeetingTime"); // grabs the time from the input
+          let meetingName = document.querySelector("#newMeetingName"); // grabs the meeting name from the input
 
-        let calendar = document.querySelector("#calendar"); // getting a reference for the calendar div
-        let dayCell = calendar.children[parseInt(meetingDay) - 1]; // finding the current cell from the calendar children
-        dayCell.classList.add("withEvent"); // adds css class to that particular cell (it will have styling for the dot which rappresents a present meeting on the day)
-        dayCell.innerHTML += "<span></span>"; // creates the span which will become the dot, and append it inside the dayCell
+          if (meetingName.value && meetingTime.value) {
+            let calendar = document.querySelector("#calendar"); // getting a reference for the calendar div
+            let dayCell = calendar.children[parseInt(meetingDay) - 1]; // finding the current cell from the calendar children
+            dayCell.classList.add("withEvent"); // adds css class to that particular cell (it will have styling for the dot which rappresents a present meeting on the day)
+            dayCell.innerHTML += "<span></span>"; // creates the span which will become the dot, and append it inside the dayCell
 
-        // console.log(meetingDay, meetingTime.value, meetingName.value);
+            // console.log(meetingDay, meetingTime.value, meetingName.value);
 
-        // pushes the new appointment in the appropriate position in the appointments array
-        appointments[parseInt(meetingDay) - 1].push(
-          meetingTime.value + " - " + meetingName.value
-        );
-        meetingTime.value = "";
-        meetingName.value = "";
+            // pushes the new appointment in the appropriate position in the appointments array
+            appointments[parseInt(meetingDay) - 1].push(
+              meetingTime.value + " - " + meetingName.value
+            );
+            meetingTime.value = "";
+            meetingName.value = "";
 
-        // console.log("APPOINTMENTS", appointments);
-        showAppointments(parseInt(meetingDay)); // shows the appointments for the currently selected day (passes the meetingDay as an integer as a parameter)
+            // console.log("APPOINTMENTS", appointments);
+            showAppointments(parseInt(meetingDay)); // shows the appointments for the currently selected day (passes the meetingDay as an integer as a parameter)
+
+            window.scrollTo(0, document.body.scrollHeight); // scrolls the page to the bottom to show the new appointment
+
+            // handling errors
+          } else if (!meetingName.value && !meetingTime.value) {
+            alert("Pick a time and set the name of the meeting");
+          } else if (!meetingName.value) {
+            alert("Insert a meeting name");
+          } else if (!meetingTime.value) {
+            alert("Pick a time before saving");
+          }
+        } else {
+          alert("Select a day before saving");
+        }
       };
 
       const showAppointments = function (day) {
